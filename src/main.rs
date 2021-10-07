@@ -1,3 +1,7 @@
+mod modules;
+mod data_structures;
+use modules::nodes_window;
+
 fn main() {
-    println!("Hello, world!");
+    nodes_window::load();
 }
