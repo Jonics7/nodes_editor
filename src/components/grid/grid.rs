@@ -1,9 +1,10 @@
 use derivative::Derivative;
+use super::settings::GridSettings;
 
 #[derive(Derivative)]
 #[derivative(Default, Debug)]
 pub struct GridCtx {
-    cell_size: f32,
+    settings: GridSettings,
 
     #[derivative(Default(value = "[[0.0; 2].into(); 2].into()"))]
     canvas_rect_screen_space: egui::Rect,
@@ -30,13 +31,13 @@ impl GridCtx {
     fn draw(&mut self, rect: egui::Rect, ui: &mut egui::Ui) {
         self.draw_background(rect, ui);
 
-        self.cell_size = 50.0;
+        let cell_size = self.settings.get_cell_size();
         
         let line_color = (1.0, egui::Rgba::from_rgb(0.5, 0.5, 0.5));
         let canvas_size = rect.size();
 
-        let mut x = self.panning.x.rem_euclid(self.cell_size);
-        let mut y = self.panning.y.rem_euclid(self.cell_size);
+        let mut x = self.panning.x.rem_euclid(cell_size);
+        let mut y = self.panning.y.rem_euclid(cell_size);
 
         while x < canvas_size.x {
             ui.painter().line_segment([
@@ -45,7 +46,7 @@ impl GridCtx {
             ], line_color
             );
     
-            x += self.cell_size;
+            x += cell_size;
         }
     
         while y < canvas_size.y {
@@ -56,7 +57,7 @@ impl GridCtx {
                 ],
                 line_color,
             );
-            y += self.cell_size;
+            y += cell_size;
         }
     }
 
