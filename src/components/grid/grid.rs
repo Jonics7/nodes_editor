@@ -1,4 +1,6 @@
 use derivative::Derivative;
+use crate::components::node::{self, NodeCtx};
+
 use super::settings::GridSettings;
 
 #[derive(Derivative)]
@@ -13,11 +15,13 @@ pub struct GridCtx {
     panning: egui::Vec2,
 }
 
-pub fn build(grid_ctx: &mut GridCtx, ui: &mut egui::Ui) {
+pub fn build(grid_ctx: &mut GridCtx, node_ctx: &mut NodeCtx, ui: &mut egui::Ui) {
     let rect = ui.available_rect_before_wrap_finite();
 
     grid_ctx.canvas_rect_screen_space = rect;
     grid_ctx.draw(rect, ui);
+
+    node::create_node(node_ctx, rect.min, 0, ui)
 }
 
 // public functions

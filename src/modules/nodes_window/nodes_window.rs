@@ -33,7 +33,7 @@ impl epi::App for data_structures::ApplicationState {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            grid::build(&mut self.grid_context, ui)
+            grid::build(&mut self.grid_context, &mut self.node_context, ui)
         });
     }
 }
