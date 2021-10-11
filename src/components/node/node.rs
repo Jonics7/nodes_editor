@@ -16,13 +16,13 @@ pub fn create_node(grid_ctx: &mut GridCtx, node_ctx: &mut NodeCtx, id: usize, ui
         node_ctx.init(id);
     }
     let rect = egui::Rect::from_min_size(node_ctx.pos, node_ctx.size);
-    let rect = grid_ctx.apply_pan_zoom(rect);
+    let rect = grid_ctx.apply_pan_zoom_rect(rect);
     let rect = grid_ctx.editor_rect_to_screen_rect(rect);
 
     let sense = if !ui.input().pointer.middle_down() { egui::Sense::click_and_drag() } else { egui::Sense::hover() };
     let mut response = ui.allocate_rect(rect, sense);
 
-    node_interaction(node_ctx, &mut response, ui);
+    node_interaction(grid_ctx, node_ctx, &mut response, ui);
 
     ui.painter().rect_filled(rect, 10.0, egui::Color32::from_rgb(255, 15, 30));
 }

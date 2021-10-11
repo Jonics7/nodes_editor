@@ -41,9 +41,6 @@ pub fn build(grid_ctx: &mut GridCtx, node_ctx: &mut NodeCtx, ui: &mut egui::Ui) 
 
 // public functions
 
-impl GridCtx {
-}
-
 // private functions
 
 impl GridCtx {
@@ -96,7 +93,11 @@ impl GridCtx {
         pos - self.canvas_rect_screen_space.min.to_vec2()
     }
 
-    pub(crate) fn apply_pan_zoom(&self, rect: egui::Rect) -> egui::Rect {
-        egui::Rect::from_min_size(rect.min + self.panning, rect.size() * self.zoom)
+    pub(crate) fn apply_pan_zoom_pos(&self, pos: egui::Pos2) -> egui::Pos2 {
+        (pos.to_vec2() * self.zoom).to_pos2() + self.panning
+    }
+
+    pub(crate) fn apply_pan_zoom_rect(&self, rect: egui::Rect) -> egui::Rect {
+        egui::Rect::from_min_size(self.apply_pan_zoom_pos(rect.min), rect.size() * self.zoom)
     }
 }
