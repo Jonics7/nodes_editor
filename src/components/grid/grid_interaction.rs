@@ -26,7 +26,7 @@ fn grid_panning(grid_ctx: &mut GridCtx, response: &mut egui::Response) -> bool {
 fn grid_zoom(grid_ctx: &mut GridCtx, ui: &mut egui::Ui) -> bool {
     let delta = ui.input().zoom_delta();
 
-    if delta != 1.0 {
+    if (delta - 1.0).abs() > 1e-9 {
         let pinch_scale = delta * grid_ctx.settings.zoom_sensivity;
         grid_ctx.zoom *= pinch_scale;
         if let Some(pinch_center) = ui.input().pointer.interact_pos() {
