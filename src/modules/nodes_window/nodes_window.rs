@@ -1,5 +1,5 @@
 use eframe::{egui, epi};
-use crate::data_structures;
+use crate::{components::grid, data_structures};
 
 pub fn load() {
     let app = data_structures::ApplicationState::default();
@@ -33,7 +33,7 @@ impl epi::App for data_structures::ApplicationState {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // Grid::instantiate().build(ui);
+            grid::build(&mut self.grid_context, ui)
         });
     }
 }
