@@ -3,6 +3,8 @@ use derivative::Derivative;
 #[derive(Derivative)]
 #[derivative(Default, Debug)]
 pub struct GridCtx {
+    cell_size: f32,
+
     #[derivative(Default(value = "[[0.0; 2].into(); 2].into()"))]
     canvas_rect_screen_space: egui::Rect,
     
@@ -20,15 +22,21 @@ pub fn build(grid_ctx: &mut GridCtx, ui: &mut egui::Ui) {
 // public functions
 
 impl GridCtx {
-    fn draw(&mut self, rect: egui::Rect, ui: &mut egui::Ui) {
-        ui.painter().rect_filled(rect, 0.0, egui::Color32::from_rgb(2, 5, 9));
+}
 
-        let grid_spacing: f32 = 50.0;
+// private functions
+
+impl GridCtx {
+    fn draw(&mut self, rect: egui::Rect, ui: &mut egui::Ui) {
+        self.draw_background(rect, ui);
+
+        self.cell_size = 50.0;
+        
         let line_color = (1.0, egui::Rgba::from_rgb(0.5, 0.5, 0.5));
         let canvas_size = rect.size();
 
-        let mut x = self.panning.x.rem_euclid(grid_spacing);
-        let mut y = self.panning.y.rem_euclid(grid_spacing);
+        let mut x = self.panning.x.rem_euclid(self.cell_size);
+        let mut y = self.panning.y.rem_euclid(self.cell_size);
 
         while x < canvas_size.x {
             ui.painter().line_segment([
@@ -37,7 +45,7 @@ impl GridCtx {
             ], line_color
             );
     
-            x += grid_spacing;
+            x += self.cell_size;
         }
     
         while y < canvas_size.y {
@@ -48,14 +56,14 @@ impl GridCtx {
                 ],
                 line_color,
             );
-            y += grid_spacing;
+            y += self.cell_size;
         }
     }
-}
 
-// private functions
+    fn draw_background(&mut self, rect: egui::Rect, ui: &mut egui::Ui) {
+        ui.painter().rect_filled(rect, 0.0, egui::Color32::from_rgb(2, 5, 9));
+    }
 
-impl GridCtx {
     fn editor_space_to_screen_space(&self, pos: egui::Pos2) -> egui::Pos2 {
         pos + self.canvas_rect_screen_space.min.to_vec2()
     }
