@@ -19,10 +19,6 @@ impl GridSettings {
     pub fn get_cell_size(&self) -> f32 {
         self.cell_size
     }
-
-    pub fn set_cell_size(&mut self, size: f32) {
-        self.cell_size = size;
-    }
 }
 
 // private functions
