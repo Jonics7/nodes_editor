@@ -5,6 +5,8 @@ use derivative::Derivative;
 pub struct GridSettings {
     #[derivative(Default(value = "50.0"))]
     cell_size: f32,
+    #[derivative(Default(value = "1.0"))]
+    pub(crate) zoom_sensivity: f32
 }
 
 // public functions
@@ -20,12 +22,3 @@ impl GridSettings {
 }
 
 // private functions
-
-impl GridSettings {
-    fn default(&self) -> Self {
-        GridSettings {
-            cell_size: 50.0,
-            // ..Default::default()
-        }
-    }
-}
