@@ -5,7 +5,7 @@ pub(crate) fn grid_interaction(grid_ctx: &mut GridCtx, response: &mut egui::Resp
     let mut changed = false;
 
     changed |= grid_panning(grid_ctx, response);
-    changed |= grid_zoom(grid_ctx, ui);
+    changed |= grid_zoom(grid_ctx, response, ui);
 
     if changed {
         response.changed();
@@ -23,7 +23,11 @@ fn grid_panning(grid_ctx: &mut GridCtx, response: &mut egui::Response) -> bool {
     }
 }
 
-fn grid_zoom(grid_ctx: &mut GridCtx, ui: &mut egui::Ui) -> bool {
+fn grid_zoom(grid_ctx: &mut GridCtx, response: &mut egui::Response, ui: &mut egui::Ui) -> bool {
+    if !response.hovered() {
+        return false;
+    }
+
     let delta = ui.input().zoom_delta();
 
     if (delta - 1.0).abs() > 1e-9 {

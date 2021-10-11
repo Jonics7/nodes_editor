@@ -21,15 +21,21 @@ pub struct GridCtx {
 
 pub fn build(grid_ctx: &mut GridCtx, node_ctx: &mut NodeCtx, ui: &mut egui::Ui) -> egui::Response {
     let rect = ui.available_rect_before_wrap_finite();
+    let mut ui = ui.child_ui(rect, egui::Layout::default());
+    let ui = &mut ui;
+    ui.set_clip_rect(rect);
 
-    let mut response = ui.allocate_rect(rect, Sense::drag());
+    let sense = if ui.input().pointer.middle_down() { Sense::drag() } else { Sense::hover() };
+    let mut response = ui.allocate_rect(rect, sense);
     
     grid_interaction(grid_ctx, &mut response, ui);
 
     grid_ctx.canvas_rect_screen_space = rect;
     grid_ctx.draw(rect, ui);
 
-    node::create_node(node_ctx, rect.min, 0, ui);
+    let mut node_ui = ui.child_ui(rect, egui::Layout::default());
+    let node_ui = &mut node_ui;
+    node::create_node(grid_ctx, node_ctx, 0, node_ui);
     response
 }
 
@@ -82,7 +88,15 @@ impl GridCtx {
         pos + self.canvas_rect_screen_space.min.to_vec2()
     }
 
+    pub(crate) fn editor_rect_to_screen_rect(&self, rect: egui::Rect) -> egui::Rect {
+        rect.translate(self.canvas_rect_screen_space.min.to_vec2())
+    }
+
     pub(crate) fn screen_space_to_editor_space(&self, pos: egui::Pos2) -> egui::Pos2 {
         pos - self.canvas_rect_screen_space.min.to_vec2()
+    }
+
+    pub(crate) fn apply_pan_zoom(&self, rect: egui::Rect) -> egui::Rect {
+        egui::Rect::from_min_size(rect.min + self.panning, rect.size() * self.zoom)
     }
 }
