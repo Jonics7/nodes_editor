@@ -31,7 +31,7 @@ fn grid_zoom(grid_ctx: &mut GridCtx, response: &mut egui::Response, ui: &mut egu
     let delta = ui.input().zoom_delta();
 
     if (delta - 1.0).abs() > 1e-9 {
-        let mut pinch_scale = delta * grid_ctx.settings.zoom_sensivity;
+        let mut pinch_scale = delta * grid_ctx.settings.zoom_sensitivity;
         let old_zoom = grid_ctx.zoom;
         grid_ctx.zoom *= pinch_scale;
         grid_ctx.zoom = grid_ctx.zoom.clamp(grid_ctx.settings.min_zoom, grid_ctx.settings.max_zoom);
